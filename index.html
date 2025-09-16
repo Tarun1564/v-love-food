@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>V Love Food Online Store</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f3f4f6;
+    }
+    .container {
+      max-width: 1200px;
+    }
+    .product-card {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+    .purchase-button {
+      transition: background-color 0.3s ease;
+    }
+    .purchase-button:hover {
+      background-color: #2563eb;
+    }
+    .price-option-button {
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .price-option-button.active {
+      background-color: #4f46e5;
+      color: #fff;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <header class="bg-white shadow-sm py-4 mb-8">
+    <div class="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center">
+      <div class="flex items-center space-x-4">
+        <h1 class="text-3xl font-bold text-gray-900">V Love Food</h1>
+      </div>
+      <div class="flex items-center space-x-2 mt-4 sm:mt-0">
+        <p class="text-lg font-medium text-gray-700">9346445057</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="container mx-auto p-4 md:p-8">
+    <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+    </div>
+
+    <div id="purchase-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50">
+      <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-sm md:max-w-md">
+        <h2 class="text-2xl font-bold text-center mb-4 text-gray-900">Place Your Order</h2>
+        <div class="flex flex-col space-y-4">
+          <input type="text" id="modal-name" placeholder="Your Name" class="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <input type="tel" id="modal-phone" placeholder="Phone Number" class="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <textarea id="modal-address" placeholder="Shipping Address" rows="3" class="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+        </div>
+        <div class="mt-6">
+          <p class="text-gray-600 text-sm italic mb-2">Order will be placed via WhatsApp. Please ensure you have it installed.</p>
+          <button id="confirm-purchase-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+            Proceed to WhatsApp
+          </button>
+          <button id="close-modal-btn" class="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 rounded-lg mt-2">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Products data from the provided image
+    const products = [
+      {
+        category: "NON VEG PICKLES",
+        items: [
+          { name: "Chicken Pickle", imageUrl: "", options: [{ size: "250g", price: 250 }, { size: "500g", price: 500 }, { size: "1000g", price: 1000 }] },
+          { name: "Spiced Chicken Relish Pickle", imageUrl: "", options: [{ size: "250g", price: 250 }, { size: "500g", price: 500 }, { size: "1000g", price: 1000 }] },
+          { name: "Prawn Pickle", imageUrl: "", options: [{ size: "250g", price: 500 }, { size: "500g", price: 1000 }, { size: "1000g", price: 2000 }] }
+        ]
+      },
+      {
+        category: "VEG PICKLES",
+        items: [
+          { name: "Tomato Pickle", imageUrl: "", options: [{ size: "250g", price: 150 }, { size: "500g", price: 300 }, { size: "1000g", price: 600 }] },
+          { name: "Sorrel Leaves Pickle", imageUrl: "", options: [{ size: "250g", price: 150 }, { size: "500g", price: 300 }, { size: "1000g", price: 600 }] }
+        ]
+      },
+      {
+        category: "SWEETS",
+        items: [
+          { name: "Peanut Chikki", imageUrl: "", options: [{ size: "500g", price: 200 }, { size: "1kg", price: 400 }] },
+          { name: "Dry Fruit Chikki", imageUrl: "", options: [{ size: "500g", price: 400 }, { size: "1kg", price: 800 }] },
+          { name: "Cashew Chikki", imageUrl: "", options: [{ size: "500g", price: 400 }, { size: "1kg", price: 800 }] },
+          { name: "URAD DAL LADDU", imageUrl: "", options: [{ size: "250g", price: 150 }, { size: "500g", price: 300 }, { size: "1000g", price: 600 }] },
+          { name: "DRY FRUIT LADDU", imageUrl: "", options: [{ size: "250g", price: 450 }, { size: "500g", price: 900 }, { size: "1000g", price: 1800 }] }
+        ]
+      },
+      {
+        category: "VEG POWDERS",
+        items: [
+          { name: "Curry Leaves Powder", imageUrl: "", options: [{ size: "100g", price: 50 }, { size: "250g", price: 125 }, { size: "500g", price: 250 }] },
+          { name: "Spiced Sesame Powder", imageUrl: "", options: [{ size: "100g", price: 70 }, { size: "250g", price: 175 }, { size: "500g", price: 350 }] },
+          { name: "Spiced Lentil Powder", imageUrl: "", options: [{ size: "100g", price: 70 }, { size: "250g", price: 175 }, { size: "500g", price: 350 }] }
+        ]
+      }
+    ];
+
+    const productsGrid = document.getElementById('products-grid');
+    const purchaseModal = document.getElementById('purchase-modal');
+    const confirmPurchaseBtn = document.getElementById('confirm-purchase-btn');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const modalNameInput = document.getElementById('modal-name');
+    const modalPhoneInput = document.getElementById('modal-phone');
+    const modalAddressInput = document.getElementById('modal-address');
+
+    // Create product card
+    function createProductCard(product, item, index) {
+      const uniqueId = `${item.name.replace(/\s/g, '-')}-${product.category.replace(/\s/g, '-')}-${index}`;
+      const card = document.createElement('div');
+      card.className = 'product-card bg-white rounded-2xl flex flex-col justify-between overflow-hidden';
+      card.innerHTML = `
+
+        <div class="p-6">
+          <h3 class="text-xl font-semibold mb-2 text-gray-900">${item.name}</h3>
+          <p class="text-sm text-gray-500 mb-4">${product.category}</p>
+          <div class="flex flex-wrap gap-2 mb-4" id="options-${uniqueId}"></div>
+          <div class="mt-4 flex items-center justify-between">
+            <p class="text-2xl font-bold text-indigo-600" id="price-${uniqueId}">₹${item.options[0].price}</p>
+            <button class="purchase-button bg-indigo-500 text-white font-medium py-2 px-6 rounded-full shadow-lg hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              Buy Now
+            </button>
+          </div>
+        </div>
+      `;
+
+      const optionsContainer = card.querySelector(`#options-${uniqueId}`);
+      const priceDisplay = card.querySelector(`#price-${uniqueId}`);
+      const buyButton = card.querySelector('.purchase-button');
+
+      // Add options
+      item.options.forEach((option, i) => {
+        const optionButton = document.createElement('button');
+        optionButton.className = 'price-option-button text-xs font-medium py-1 px-3 rounded-full border border-gray-300 text-gray-600';
+        if (i === 0) optionButton.classList.add('active');
+        optionButton.textContent = `${option.size} - ₹${option.price}`;
+        optionButton.setAttribute('data-size', option.size);
+        optionButton.setAttribute('data-price', option.price);
+
+        optionButton.addEventListener('click', () => {
+          card.querySelectorAll('.price-option-button').forEach(btn => btn.classList.remove('active'));
+          optionButton.classList.add('active');
+          priceDisplay.textContent = `₹${option.price}`;
+        });
+        optionsContainer.appendChild(optionButton);
+      });
+
+      // Buy button
+      buyButton.addEventListener('click', () => {
+        const activeOptionBtn = card.querySelector('.price-option-button.active');
+        const selectedOption = {
+          size: activeOptionBtn.getAttribute('data-size'),
+          price: activeOptionBtn.getAttribute('data-price')
+        };
+        showPurchaseModal(item.name, selectedOption);
+      });
+
+      return card;
+    }
+
+    // Show modal
+    function showPurchaseModal(productName, selectedOption) {
+      purchaseModal.classList.remove('hidden');
+      purchaseModal.classList.add('flex');
+      modalNameInput.value = '';
+      modalPhoneInput.value = '';
+      modalAddressInput.value = '';
+
+      confirmPurchaseBtn.onclick = () => {
+        const name = modalNameInput.value.trim();
+        const phone = modalPhoneInput.value.trim();
+        const address = modalAddressInput.value.trim();
+
+        if (!name || !phone || !address) {
+          alert('Please fill in all fields.');
+          return;
+        }
+        if (!/^\d{10}$/.test(phone)) {
+          alert('Enter a valid 10-digit phone number.');
+          return;
+        }
+
+        const message = "Hello, I would like to order:"
+                    + "\n\n*Product:* " + productName
+                    + "\n*Quantity:* " + selectedOption.size
+                    + "\n*Price:* ₹" + selectedOption.price
+                    + "\n\n*Customer Details:*"
+                    + "\nName: " + name
+                    + "\nPhone: " + phone
+                    + "\nAddress: " + address;
+
+        const whatsappUrl = `https://wa.me/919346445057?text=${encodeURIComponent(message)}`;
+        
+        window.open(whatsappUrl, '_blank');
+        closePurchaseModal();
+      };
+    }
+
+    function closePurchaseModal() {
+      purchaseModal.classList.add('hidden');
+      purchaseModal.classList.remove('flex');
+      modalNameInput.value = '';
+      modalPhoneInput.value = '';
+      modalAddressInput.value = '';
+    }
+
+    closeModalBtn.addEventListener('click', closePurchaseModal);
+
+    // Render products
+    products.forEach((category, i) => {
+      category.items.forEach((item, j) => {
+        const card = createProductCard(category, item, `${i}-${j}`);
+        productsGrid.appendChild(card);
+      });
+    });
+  </script>
+
+</body>
+</html>
