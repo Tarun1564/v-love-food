@@ -1,357 +1,430 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>V Love Food — Responsive</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>V Love Food — Online Store</title>
+  
+  <!-- Favicon using a data URI (Red Chili emoji) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌶️</text></svg>">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Load Inter Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* small custom styles for focused visuals */
-    .product-card { min-height: 100%; }
-    .modal-backdrop { background: rgba(0,0,0,0.45); }
-    /* tiny helper to visually hide elements but keep accessible */
-    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
-  </style>
+  <style>
+    /* Custom styles */
+    body { font-family: 'Inter', sans-serif; }
+    
+    .product-card { 
+        min-height: 100%; 
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        border-radius: 1rem;
+    }
+    .modal-backdrop { 
+        background: rgba(0,0,0,0.45); 
+        position: fixed; 
+        inset: 0;
+    }
+    
+    /* Custom notification box styles */
+    .custom-notification {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 400px;
+        z-index: 60;
+    }
+    
+    /* tiny helper to visually hide elements but keep accessible */
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+  </style>
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased">
 
-  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-sm border-b border-gray-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16">
-        <div class="flex items-center space-x-3">
-          <img class="text-2xl font-extrabold tracking-tight" src="assets/1.jpg" width="100" height="40">
-          <span class="text-sm text-gray-500">Handmade pickles • sweets • powders</span>
-        </div>
-        <div class="flex items-center space-x-4">
-          <div class="hidden sm:flex flex-col text-right">
-            <span class="text-sm font-medium">Order / WhatsApp</span>
-            <a href="tel:+919346445057" class="text-indigo-600 text-sm font-semibold">+91 93464 45057</a>
-          </div>
-          <button id="open-catalog-btn" class="inline-flex items-center px-3 py-2 rounded-md bg-indigo-600 text-white text-sm shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">View Catalog</button>
-        </div>
-      </div>
-    </div>
-  </header>
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-sm border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center space-x-3">
+          <img class="text-2xl font-extrabold tracking-tight" src="assets/1.jpg" width="100" height="40" alt="V Love Food Logo">
+          <span class="text-sm text-gray-500 hidden sm:inline">Handmade pickles • sweets • powders</span>
+          <span class="text-sm text-gray-500 sm:hidden">Handmade Food</span>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div class="hidden sm:flex flex-col text-right">
+            <span class="text-sm font-medium">Order / WhatsApp</span>
+            <a href="tel:+919346445057" class="text-indigo-600 text-sm font-semibold hover:text-indigo-700">+91 93464 45057</a>
+          </div>
+          <button id="open-catalog-btn" class="inline-flex items-center px-3 py-2 rounded-md bg-indigo-600 text-white text-sm shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">View Catalog</button>
+        </div>
+      </div>
+    </div>
+  </header>
 
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-center text-gray-900 mb-8">Authentic Indian Delights</h1>
 
-    <section id="products-grid" class="space-y-8">
-      <!-- Categories and products will be rendered here -->
-    </section>
+    <section id="products-grid" class="space-y-8">
+      <!-- Categories and products will be rendered here -->
+    </section>
 
-  </main>
+  </main>
 
-  <!-- Purchase Modal (hidden by default) -->
-  <div id="purchase-modal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="orderModalLabel">
-    <div class="modal-backdrop absolute inset-0" tabindex="-1"></div>
-    <div class="relative max-w-md mx-auto mt-20 sm:mt-28 p-4">
-      <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
-        <div class="p-6">
-          <h2 id="orderModalLabel" class="text-xl font-bold text-gray-900">Confirm your order</h2>
-          <p id="modal-product-summary" class="text-sm text-gray-600 mt-2"> </p>
+  <!-- Purchase Modal (hidden by default) -->
+  <div id="purchase-modal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="orderModalLabel">
+    <div class="modal-backdrop absolute inset-0" tabindex="-1"></div>
+    <div class="relative max-w-md mx-auto mt-20 sm:mt-28 p-4">
+      <div class="bg-white rounded-2xl shadow-2xl overflow-hidden ring-4 ring-indigo-500/20">
+        <div class="p-6">
+          <h2 id="orderModalLabel" class="text-xl font-bold text-gray-900">Confirm Your Order</h2>
+          <p id="modal-product-summary" class="text-sm text-gray-600 mt-2 font-medium border-b pb-3 mb-4"> </p>
 
-          <form id="order-form" class="mt-4 space-y-3">
-            <div>
-              <label class="sr-only" for="modal-name">Name</label>
-              <input id="modal-name" name="name" type="text" placeholder="Your name" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none" required />
+          <form id="order-form" class="space-y-3">
+            <div>
+              <label class="sr-only" for="modal-name">Name</label>
+              <input id="modal-name" name="name" type="text" placeholder="Your Name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none" required />
+            </div>
+            <div>
+              <label class="sr-only" for="modal-phone">Phone</label>
+              <input id="modal-phone" name="phone" type="tel" placeholder="Phone (10 digits, e.g. 98xxxxxxxx)" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none" inputmode="tel" required />
+            </div>
+            <div>
+              <label class="sr-only" for="modal-address">Address</label>
+              <textarea id="modal-address" name="address" rows="3" placeholder="Shipping address" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none" required></textarea>
+            </div>
+
+            <div class="flex items-center space-x-2 pt-2">
+              <label class="flex items-center text-sm text-gray-600">
+                <input id="save-info" type="checkbox" class="mr-2 h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" /> Save details for next time
+              </label>
+            </div>
+
+            <div class="mt-4 grid grid-cols-2 gap-3 pt-4 border-t">
+              <button id="cancel-purchase-btn" type="button" class="w-full inline-flex justify-center items-center gap-2 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 focus:outline-none">Cancel</button>
+              <button id="confirm-purchase-btn" type="button" class="w-full inline-flex justify-center items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">Proceed to WhatsApp</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Product data (kept from your original input)
+    const products = [
+      {
+        category: "NON VEG PICKLES",
+        items: [
+          { name: "Chicken Pickle", imageUrl: "assets/2.jpg", options: [{ size: "250g", price: 250 }, { size: "500g", price: 500 }, { size: "1000g", price: 1000 }] },
+          { name: "Spiced Chicken Relish Pickle", imageUrl: "assets/7.jpg", options: [{ size: "250g", price: 250 }, { size: "500g", price: 500 }, { size: "1000g", price: 1000 }] },
+          { name: "Prawn Pickle", imageUrl: "assets/14.jpg", options: [{ size: "250g", price: 500 }, { size: "500g", price: 1000 }, { size: "1000g", price: 2000 }] }
+        ]
+      },
+      {
+        category: "VEG PICKLES",
+        items: [
+          { name: "Tomato Pickle", imageUrl: "assets/12.jpg", options: [{ size: "250g", price: 150 }, { size: "500g", price: 300 }, { size: "1000g", price: 600 }] },
+          { name: "Sorrel Leaves Pickle", imageUrl: "assets/13.jpg", options: [{ size: "250g", price: 150 }, { size: "500g", price: 300 }, { size: "1000g", price: 600 }] }
+        ]
+      },
+      {
+        category: "SWEETS",
+        items: [
+          { name: "Peanut Chikki", imageUrl: "assets/9.jpg", options: [{ size: "500g", price: 200 }, { size: "1kg", price: 400 }] },
+          { name: "Dry Fruit Chikki", imageUrl: "assets/4.jpg", options: [{ size: "500g", price: 400 }, { size: "1kg", price: 800 }] },
+          { name: "Cashew Chikki", imageUrl: "assets/5.jpg", options: [{ size: "500g", price: 400 }, { size: "1kg", price: 800 }] },
+          { name: "URAD DAL LADDU", imageUrl: "assets/6.jpg", options: [{ size: "250g", price: 150 }, { size: "500g", price: 300 }, { size: "1000g", price: 600 }] },
+          { name: "DRY FRUIT LADDU", imageUrl: "assets/10.jpg", options: [{ size: "250g", price: 450 }, { size: "500g", price: 900 }, { size: "1000g", price: 1800 }] }
+        ]
+      },
+      {
+        category: "VEG POWDERS",
+        items: [
+          { name: "Curry Leaves Powder", imageUrl: "assets/8.jpg", options: [{ size: "100g", price: 50 }, { size: "250g", price: 125 }, { size: "500g", price: 250 }] },
+          { name: "Spiced Sesame Powder", imageUrl: "assets/11.jpg", options: [{ size: "100g", price: 70 }, { size: "250g", price: 175 }, { size: "500g", price: 350 }] },
+          { name: "Spiced Lentil Powder", imageUrl: "assets/3.jpg", options: [{ size: "100g", price: 70 }, { size: "250g", price: 175 }, { size: "500g", price: 350 }] }
+        ]
+      }
+    ];
+
+    // DOM references
+    const productsGrid = document.getElementById('products-grid');
+    const purchaseModal = document.getElementById('purchase-modal');
+    const modalBackdrop = purchaseModal.querySelector('.modal-backdrop');
+    const modalProductSummary = document.getElementById('modal-product-summary');
+    const modalNameInput = document.getElementById('modal-name');
+    const modalPhoneInput = document.getElementById('modal-phone');
+    const modalAddressInput = document.getElementById('modal-address');
+    const saveInfoCheckbox = document.getElementById('save-info');
+    const confirmPurchaseBtn = document.getElementById('confirm-purchase-btn');
+    const cancelPurchaseBtn = document.getElementById('cancel-purchase-btn');
+    const openCatalogBtn = document.getElementById('open-catalog-btn');
+
+    // Keep current order info in memory
+    let currentOrder = null;
+
+    // --- Custom Notification/Alert Logic (Replaces alert()) ---
+
+    /**
+     * Displays a temporary notification message at the top of the screen.
+     * @param {string} message - The message to display.
+     */
+    function showNotification(message) {
+        // Remove any existing notifications
+        document.querySelectorAll('.custom-notification').forEach(n => n.remove());
+
+        const notificationDiv = document.createElement('div');
+        notificationDiv.className = 'custom-notification p-4 bg-red-500 text-white rounded-lg shadow-xl mt-4 animate-in fade-in slide-in-from-top-4 duration-300';
+        
+        notificationDiv.innerHTML = `
+            <div class="flex items-center justify-between">
+                <p class="font-medium text-sm">${message}</p>
+                <button class="text-white opacity-70 hover:opacity-100 transition-opacity" onclick="this.closest('.custom-notification').remove()" aria-label="Close notification">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                </button>
             </div>
-            <div>
-              <label class="sr-only" for="modal-phone">Phone</label>
-              <input id="modal-phone" name="phone" type="tel" placeholder="Phone (10 digits, e.g. 98xxxxxxxx)" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none" inputmode="tel" required />
-            </div>
-            <div>
-              <label class="sr-only" for="modal-address">Address</label>
-              <textarea id="modal-address" name="address" rows="3" placeholder="Shipping address" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none" required></textarea>
-            </div>
+        `;
+        document.body.appendChild(notificationDiv);
 
-            <div class="flex items-center space-x-2">
-              <label class="flex items-center text-sm text-gray-600">
-                <input id="save-info" type="checkbox" class="mr-2" /> Save details for next time
-              </label>
-            </div>
+        // Auto-dismiss after 5 seconds
+        setTimeout(() => {
+            notificationDiv.remove();
+        }, 5000);
+    }
 
-            <div class="mt-4 grid grid-cols-1 gap-3">
-              <button id="confirm-purchase-btn" type="button" class="w-full inline-flex justify-center items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md font-semibold hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">Proceed to WhatsApp</button>
-              <button id="cancel-purchase-btn" type="button" class="w-full inline-flex justify-center items-center gap-2 px-4 py-2 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 focus:outline-none">Cancel</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+    // --- End Custom Notification Logic ---
 
-  <script>
-    // Product data (kept from your original input)
-    const products = [
-      {
-        category: "NON VEG PICKLES",
-        items: [
-          { name: "Chicken Pickle", imageUrl: "assets/2.jpg", options: [{ size: "250g", price: 250 }, { size: "500g", price: 500 }, { size: "1000g", price: 1000 }] },
-          { name: "Spiced Chicken Relish Pickle", imageUrl: "assets/7.jpg", options: [{ size: "250g", price: 250 }, { size: "500g", price: 500 }, { size: "1000g", price: 1000 }] },
-          { name: "Prawn Pickle", imageUrl: "assets/14.jpg", options: [{ size: "250g", price: 500 }, { size: "500g", price: 1000 }, { size: "1000g", price: 2000 }] }
-        ]
-      },
-      {
-        category: "VEG PICKLES",
-        items: [
-          { name: "Tomato Pickle", imageUrl: "assets/12.jpg", options: [{ size: "250g", price: 150 }, { size: "500g", price: 300 }, { size: "1000g", price: 600 }] },
-          { name: "Sorrel Leaves Pickle", imageUrl: "assets/13.jpg", options: [{ size: "250g", price: 150 }, { size: "500g", price: 300 }, { size: "1000g", price: 600 }] }
-        ]
-      },
-      {
-        category: "SWEETS",
-        items: [
-          { name: "Peanut Chikki", imageUrl: "assets/9.jpg", options: [{ size: "500g", price: 200 }, { size: "1kg", price: 400 }] },
-          { name: "Dry Fruit Chikki", imageUrl: "assets/4.jpg", options: [{ size: "500g", price: 400 }, { size: "1kg", price: 800 }] },
-          { name: "Cashew Chikki", imageUrl: "assets/5.jpg", options: [{ size: "500g", price: 400 }, { size: "1kg", price: 800 }] },
-          { name: "URAD DAL LADDU", imageUrl: "assets/6.jpg", options: [{ size: "250g", price: 150 }, { size: "500g", price: 300 }, { size: "1000g", price: 600 }] },
-          { name: "DRY FRUIT LADDU", imageUrl: "assets/10.jpg", options: [{ size: "250g", price: 450 }, { size: "500g", price: 900 }, { size: "1000g", price: 1800 }] }
-        ]
-      },
-      {
-        category: "VEG POWDERS",
-        items: [
-          { name: "Curry Leaves Powder", imageUrl: "assets/8.jpg", options: [{ size: "100g", price: 50 }, { size: "250g", price: 125 }, { size: "500g", price: 250 }] },
-          { name: "Spiced Sesame Powder", imageUrl: "assets/11.jpg", options: [{ size: "100g", price: 70 }, { size: "250g", price: 175 }, { size: "500g", price: 350 }] },
-          { name: "Spiced Lentil Powder", imageUrl: "assets/OIP.jpg", options: [{ size: "100g", price: 70 }, { size: "250g", price: 175 }, { size: "500g", price: 350 }] }
-        ]
+
+    // Utility: create slug id
+    function makeId(text){
+      return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g,'');
+    }
+
+    // Render categories and products responsively
+    function renderProducts(){
+      productsGrid.innerHTML = '';
+      products.forEach((category) => {
+        const section = document.createElement('section');
+        section.className = 'bg-white rounded-xl shadow-md p-4 sm:p-6';
+
+        const header = document.createElement('div');
+        header.className = 'flex items-center justify-between mb-4 pb-2 border-b border-gray-100';
+        header.innerHTML = `<h2 class="text-lg font-semibold text-gray-900">${category.category}</h2>`;
+        section.appendChild(header);
+
+        // Centered grid
+        const grid = document.createElement('div');
+        grid.className = 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-items-center';
+
+        category.items.forEach((item, idx) => {
+          const card = createProductCard(category.category, item, idx);
+          grid.appendChild(card);
+        });
+
+        section.appendChild(grid);
+        productsGrid.appendChild(section);
+      });
+    }
+
+    // Create each product card (accessible & responsive)
+    function createProductCard(category, item, index){
+      const uid = makeId(item.name + '-' + index);
+
+      const card = document.createElement('article');
+      card.className = 'product-card bg-white rounded-2xl shadow-lg hover:shadow-xl w-full max-w-xs transition-transform transform hover:-translate-y-1 flex flex-col overflow-hidden';
+      card.setAttribute('aria-labelledby', `title-${uid}`);
+
+      // Image area
+      const imgWrap = document.createElement('div');
+      imgWrap.className = 'w-full h-32 sm:h-36 bg-gray-100 overflow-hidden'; // Smaller image height
+      const img = document.createElement('img');
+      img.src = item.imageUrl;
+      img.alt = item.name + ' - ' + category;
+      img.loading = 'lazy';
+      img.className = 'w-full h-full object-cover';
+      // fallback inline svg if image missing
+      img.onerror = function(){ this.onerror = null; this.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400'><rect width='100%' height='100%' fill='%23e5e7eb'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%239ca3af' font-family='Inter' font-size='20'>V Love Food</text></svg>"; }
+      imgWrap.appendChild(img);
+      card.appendChild(imgWrap);
+
+      // Card body
+      const body = document.createElement('div');
+      body.className = 'p-3 sm:p-4 flex-1 flex flex-col'; // Reduced padding
+
+      const title = document.createElement('h3');
+      title.id = `title-${uid}`;
+      title.className = 'text-sm sm:text-base font-semibold text-gray-900 mb-1'; // Smaller font
+      title.textContent = item.name;
+      body.appendChild(title);
+
+      const cat = document.createElement('p');
+      cat.className = 'text-xs text-gray-500 mb-3';
+      cat.textContent = category;
+      body.appendChild(cat);
+
+      // Options (radiogroup-like buttons)
+      const optionsWrap = document.createElement('div');
+      optionsWrap.className = 'flex flex-wrap gap-1 mb-3';
+      optionsWrap.setAttribute('role','radiogroup');
+      optionsWrap.setAttribute('aria-label', item.name + ' sizes');
+
+      item.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'price-option inline-flex items-center text-xs border border-gray-300 px-2 py-0.5 rounded-full font-medium focus:outline-none focus:ring-2 focus:ring-indigo-400'; // Smaller buttons
+        btn.textContent = `${opt.size} - ₹${opt.price}`;
+        btn.setAttribute('data-size', opt.size);
+        btn.setAttribute('data-price', opt.price);
+        btn.setAttribute('role','radio');
+        btn.setAttribute('aria-checked', i===0 ? 'true' : 'false');
+        btn.tabIndex = 0;
+        if(i===0) btn.classList.add('bg-indigo-600','text-white','border-indigo-600');
+
+        // pointer + keyboard
+        btn.addEventListener('click', () => selectOption(btn, optionsWrap));
+        btn.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); } });
+
+        optionsWrap.appendChild(btn);
+      });
+
+      body.appendChild(optionsWrap);
+
+      // Price & actions
+      const footer = document.createElement('div');
+      footer.className = 'mt-auto pt-3 border-t border-gray-100 flex items-center justify-between';
+
+      const price = document.createElement('p');
+      price.className = 'text-base font-bold text-indigo-600'; // Smaller price font
+      price.textContent = '₹' + item.options[0].price;
+      price.id = `price-${uid}`;
+      footer.appendChild(price);
+
+      const buyBtn = document.createElement('button');
+      buyBtn.className = 'buy-now inline-flex items-center px-3 py-1.5 rounded-full bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-md';
+      buyBtn.textContent = 'Buy Now';
+      buyBtn.addEventListener('click', () => {
+        // determine selected option
+        const active = optionsWrap.querySelector('[aria-checked="true"]');
+        const sel = { size: active.getAttribute('data-size'), price: active.getAttribute('data-price') };
+        showPurchaseModal(item.name, sel);
+      });
+
+      footer.appendChild(buyBtn);
+      body.appendChild(footer);
+
+      card.appendChild(body);
+      return card;
+    }
+
+    function selectOption(button, container){
+      container.querySelectorAll('[role="radio"]').forEach(b => {
+        b.setAttribute('aria-checked','false');
+        b.classList.remove('bg-indigo-600','text-white','border-indigo-600');
+        b.classList.add('text-gray-600', 'hover:bg-gray-50');
+      });
+      button.setAttribute('aria-checked','true');
+      button.classList.add('bg-indigo-600','text-white','border-indigo-600');
+      button.classList.remove('text-gray-600', 'hover:bg-gray-50');
+
+      // update price display nearby
+      const card = button.closest('.product-card');
+      const priceEl = card.querySelector('[id^="price-"]');
+      if(priceEl) priceEl.textContent = '₹' + button.getAttribute('data-price');
+    }
+
+    // Show modal and pre-fill fields with localStorage saved values (if any)
+    function showPurchaseModal(productName, selectedOption){
+      currentOrder = { productName, ...selectedOption };
+      modalProductSummary.innerHTML = `<span class="font-semibold">${productName}</span> • ${selectedOption.size} • <span class="text-indigo-600 font-bold">₹${selectedOption.price}</span>`;
+
+      // Populate saved info
+      const savedName = localStorage.getItem('vlove_name');
+      const savedPhone = localStorage.getItem('vlove_phone');
+      const savedAddress = localStorage.getItem('vlove_address');
+      if(savedName) modalNameInput.value = savedName;
+      if(savedPhone) modalPhoneInput.value = savedPhone;
+      if(savedAddress) modalAddressInput.value = savedAddress;
+      
+      // Set checkbox status based on whether fields were pre-filled
+      saveInfoCheckbox.checked = !!savedName || !!savedPhone || !!savedAddress;
+
+      purchaseModal.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+
+      // focus first field
+      setTimeout(()=> modalNameInput.focus(), 100);
+    }
+
+    function closePurchaseModal(){
+      purchaseModal.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+      currentOrder = null;
+    }
+
+    // validate Indian phone (allow +91 or leading 0) - basic check
+    function isValidIndianPhone(phone){
+      const cleaned = phone.replace(/\s|-/g,'');
+      return /^(?:\+91|0)?[6-9]\d{9}$/.test(cleaned);
+    }
+
+    // Build WhatsApp URL and open new tab/window
+    function sendWhatsAppOrder(name, phone, address){
+      if(!currentOrder) return;
+      const message = `Hello, I would like to order:%0A%0A*Product:* ${encodeURIComponent(currentOrder.productName)}%0A*Quantity:* ${encodeURIComponent(currentOrder.size)}%0A*Price:* ₹${encodeURIComponent(currentOrder.price)}%0A%0A*Customer Details:*%0AName: ${encodeURIComponent(name)}%0APhone: ${encodeURIComponent(phone)}%0AAddress: ${encodeURIComponent(address)}`;
+      // seller number
+      const seller = '919346445057';
+      const url = `https://api.whatsapp.com/send?phone=${seller}&text=${message}`;
+      window.open(url, '_blank');
+    }
+
+    // Event handlers
+    confirmPurchaseBtn.addEventListener('click', () => {
+      const name = modalNameInput.value.trim();
+      const phone = modalPhoneInput.value.trim();
+      const address = modalAddressInput.value.trim();
+
+      if(!name || !phone || !address){
+        showNotification('Please fill in all required fields.');
+        return;
+      }
+      if(!isValidIndianPhone(phone)){
+        showNotification('Please enter a valid 10-digit Indian phone number.');
+        modalPhoneInput.focus();
+        return;
+      }
+
+      // optionally save
+      if(saveInfoCheckbox.checked){
+        localStorage.setItem('vlove_name', name);
+        localStorage.setItem('vlove_phone', phone);
+        localStorage.setItem('vlove_address', address);
+      } else {
+        // If unchecked, clear storage to ensure no pre-fill next time
+        localStorage.removeItem('vlove_name');
+        localStorage.removeItem('vlove_phone');
+        localStorage.removeItem('vlove_address');
       }
-    ];
 
-    // DOM references
-    const productsGrid = document.getElementById('products-grid');
-    const purchaseModal = document.getElementById('purchase-modal');
-    const modalBackdrop = purchaseModal.querySelector('.modal-backdrop');
-    const modalProductSummary = document.getElementById('modal-product-summary');
-    const modalNameInput = document.getElementById('modal-name');
-    const modalPhoneInput = document.getElementById('modal-phone');
-    const modalAddressInput = document.getElementById('modal-address');
-    const saveInfoCheckbox = document.getElementById('save-info');
-    const confirmPurchaseBtn = document.getElementById('confirm-purchase-btn');
-    const cancelPurchaseBtn = document.getElementById('cancel-purchase-btn');
-    const openCatalogBtn = document.getElementById('open-catalog-btn');
+      sendWhatsAppOrder(name, phone, address);
+      closePurchaseModal();
+    });
 
-    // Keep current order info in memory
-    let currentOrder = null;
+    cancelPurchaseBtn.addEventListener('click', closePurchaseModal);
 
-    // Utility: create slug id
-    function makeId(text){
-      return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g,'');
-    }
+    // clicking the backdrop closes the modal
+    modalBackdrop.addEventListener('click', closePurchaseModal);
 
-    // Render categories and products responsively
-    function renderProducts(){
-      productsGrid.innerHTML = '';
-      products.forEach((category) => {
-        const section = document.createElement('section');
-        section.className = 'bg-white/30 rounded-xl p-4 sm:p-6';
+    // Escape key to close
+    window.addEventListener('keydown', (e) => { if(e.key === 'Escape' && !purchaseModal.classList.contains('hidden')) closePurchaseModal(); });
 
-        const header = document.createElement('div');
-        header.className = 'flex items-center justify-between mb-4';
-        header.innerHTML = `<h2 class="text-lg font-semibold text-gray-900">${category.category}</h2>`;
-        section.appendChild(header);
+    // Open catalog button scrolls to products
+    openCatalogBtn.addEventListener('click', () => { window.scrollTo({ top: document.getElementById('products-grid').offsetTop - 80, behavior: 'smooth' }); });
 
-        const grid = document.createElement('div');
-        grid.className = 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4';
-
-        category.items.forEach((item, idx) => {
-          const card = createProductCard(category.category, item, idx);
-          grid.appendChild(card);
-        });
-
-        section.appendChild(grid);
-        productsGrid.appendChild(section);
-      });
-    }
-
-    // Create each product card (accessible & responsive)
-    function createProductCard(category, item, index){
-      const uid = makeId(item.name + '-' + index);
-
-      const card = document.createElement('article');
-      card.className = 'product-card bg-white rounded-2xl shadow-sm hover:shadow-lg transition-transform transform hover:-translate-y-1 flex flex-col overflow-hidden';
-      card.setAttribute('aria-labelledby', `title-${uid}`);
-
-      // Image area
-      const imgWrap = document.createElement('div');
-      imgWrap.className = 'w-full h-44 md:h-48 lg:h-40 bg-gray-100 overflow-hidden';
-      const img = document.createElement('img');
-      img.src = item.imageUrl;
-      img.alt = item.name + ' - ' + category;
-      img.loading = 'lazy';
-      img.className = 'w-full h-full object-cover';
-      // fallback inline svg if image missing
-      img.onerror = function(){ this.onerror = null; this.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400'><rect width='100%' height='100%' fill='%23f3f4f6'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%239ca3af' font-family='Arial' font-size='20'>Image not available</text></svg>"; }
-      imgWrap.appendChild(img);
-      card.appendChild(imgWrap);
-
-      // Card body
-      const body = document.createElement('div');
-      body.className = 'p-4 flex-1 flex flex-col';
-
-      const title = document.createElement('h3');
-      title.id = `title-${uid}`;
-      title.className = 'text-md font-semibold text-gray-900 mb-1';
-      title.textContent = item.name;
-      body.appendChild(title);
-
-      const cat = document.createElement('p');
-      cat.className = 'text-xs text-gray-500 mb-3';
-      cat.textContent = category;
-      body.appendChild(cat);
-
-      // Options (radiogroup-like buttons)
-      const optionsWrap = document.createElement('div');
-      optionsWrap.className = 'flex flex-wrap gap-2 mb-3';
-      optionsWrap.setAttribute('role','radiogroup');
-      optionsWrap.setAttribute('aria-label', item.name + ' sizes');
-
-      item.options.forEach((opt, i) => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'price-option inline-flex items-center text-sm border border-gray-200 px-3 py-1 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-400';
-        btn.textContent = `${opt.size} - ₹${opt.price}`;
-        btn.setAttribute('data-size', opt.size);
-        btn.setAttribute('data-price', opt.price);
-        btn.setAttribute('role','radio');
-        btn.setAttribute('aria-checked', i===0 ? 'true' : 'false');
-        btn.tabIndex = 0;
-        if(i===0) btn.classList.add('bg-indigo-600','text-white','border-indigo-600');
-
-        // pointer + keyboard
-        btn.addEventListener('click', () => selectOption(btn, optionsWrap));
-        btn.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); } });
-
-        optionsWrap.appendChild(btn);
-      });
-
-      body.appendChild(optionsWrap);
-
-      // Price & actions
-      const footer = document.createElement('div');
-      footer.className = 'mt-auto flex items-center justify-between';
-
-      const price = document.createElement('p');
-      price.className = 'text-lg font-bold text-indigo-600';
-      price.textContent = '₹' + item.options[0].price;
-      price.id = `price-${uid}`;
-      footer.appendChild(price);
-
-      const buyBtn = document.createElement('button');
-      buyBtn.className = 'buy-now inline-flex items-center px-4 py-2 rounded-full bg-indigo-600 text-white font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500';
-      buyBtn.textContent = 'Buy Now';
-      buyBtn.addEventListener('click', () => {
-        // determine selected option
-        const active = optionsWrap.querySelector('[aria-checked="true"]');
-        const sel = { size: active.getAttribute('data-size'), price: active.getAttribute('data-price') };
-        showPurchaseModal(item.name, sel);
-      });
-
-      footer.appendChild(buyBtn);
-      body.appendChild(footer);
-
-      card.appendChild(body);
-      return card;
-    }
-
-    function selectOption(button, container){
-      container.querySelectorAll('[role="radio"]').forEach(b => {
-        b.setAttribute('aria-checked','false');
-        b.classList.remove('bg-indigo-600','text-white','border-indigo-600');
-      });
-      button.setAttribute('aria-checked','true');
-      button.classList.add('bg-indigo-600','text-white','border-indigo-600');
-
-      // update price display nearby
-      const card = button.closest('.product-card');
-      const priceEl = card.querySelector('[id^="price-"]');
-      if(priceEl) priceEl.textContent = '₹' + button.getAttribute('data-price');
-    }
-
-    // Show modal and pre-fill fields with localStorage saved values (if any)
-    function showPurchaseModal(productName, selectedOption){
-      currentOrder = { productName, ...selectedOption };
-      modalProductSummary.textContent = `${productName} • ${selectedOption.size} • ₹${selectedOption.price}`;
-
-      // Populate saved info
-      const savedName = localStorage.getItem('vlove_name');
-      const savedPhone = localStorage.getItem('vlove_phone');
-      const savedAddress = localStorage.getItem('vlove_address');
-      if(savedName) modalNameInput.value = savedName;
-      if(savedPhone) modalPhoneInput.value = savedPhone;
-      if(savedAddress) modalAddressInput.value = savedAddress;
-
-      purchaseModal.classList.remove('hidden');
-      document.body.classList.add('overflow-hidden');
-
-      // focus first field
-      setTimeout(()=> modalNameInput.focus(), 100);
-    }
-
-    function closePurchaseModal(){
-      purchaseModal.classList.add('hidden');
-      document.body.classList.remove('overflow-hidden');
-      currentOrder = null;
-    }
-
-    // validate Indian phone (allow +91 or leading 0) - basic check
-    function isValidIndianPhone(phone){
-      const cleaned = phone.replace(/\s|-/g,'');
-      return /^(?:\+91|0)?[6-9]\d{9}$/.test(cleaned);
-    }
-
-    // Build WhatsApp URL and open new tab/window
-    function sendWhatsAppOrder(name, phone, address){
-      if(!currentOrder) return;
-      const message = `Hello, I would like to order:%0A%0A*Product:* ${encodeURIComponent(currentOrder.productName)}%0A*Quantity:* ${encodeURIComponent(currentOrder.size)}%0A*Price:* ₹${encodeURIComponent(currentOrder.price)}%0A%0A*Customer Details:*%0AName: ${encodeURIComponent(name)}%0APhone: ${encodeURIComponent(phone)}%0AAddress: ${encodeURIComponent(address)}`;
-      // seller number
-      const seller = '919346445057';
-      const url = `https://api.whatsapp.com/send?phone=${seller}&text=${message}`;
-      window.open(url, '_blank');
-    }
-
-    // Event handlers
-    confirmPurchaseBtn.addEventListener('click', () => {
-      const name = modalNameInput.value.trim();
-      const phone = modalPhoneInput.value.trim();
-      const address = modalAddressInput.value.trim();
-
-      if(!name || !phone || !address){
-        alert('Please fill all fields');
-        return;
-      }
-      if(!isValidIndianPhone(phone)){
-        alert('Enter a valid Indian phone number (10 digits, optionally prefixed with +91 or 0)');
-        modalPhoneInput.focus();
-        return;
-      }
-
-      // optionally save
-      if(saveInfoCheckbox.checked){
-        localStorage.setItem('vlove_name', name);
-        localStorage.setItem('vlove_phone', phone);
-        localStorage.setItem('vlove_address', address);
-      }
-
-      sendWhatsAppOrder(name, phone, address);
-      closePurchaseModal();
-    });
-
-    cancelPurchaseBtn.addEventListener('click', closePurchaseModal);
-
-    // clicking the backdrop closes the modal
-    modalBackdrop.addEventListener('click', closePurchaseModal);
-
-    // Escape key to close
-    window.addEventListener('keydown', (e) => { if(e.key === 'Escape' && !purchaseModal.classList.contains('hidden')) closePurchaseModal(); });
-
-    // Open catalog button scrolls to products
-    openCatalogBtn.addEventListener('click', () => { window.scrollTo({ top: document.getElementById('products-grid').offsetTop - 80, behavior: 'smooth' }); });
-
-    // initial render
-    renderProducts();
-  </script>
+    // initial render
+    renderProducts();
+  </script>
 
 </body>
 </html>
