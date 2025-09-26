@@ -23,7 +23,6 @@
       /* Custom hover effect */
       transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
       border-radius: 1rem;
-    height:25%;
       overflow: hidden;
     }
     .product-card:hover {
@@ -31,8 +30,9 @@
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05) !important;
     }
     .product-image {
+      /* Reduced height for smaller cards */
       width: 100%;
-      height: 250px; /* Fixed height for consistent grid look */
+      height: 150px; 
       object-fit: cover; /* Ensures image covers the area */
     }
 
@@ -42,8 +42,9 @@
       border: 1px solid #ced4da;
       color: #6c757d;
       background-color: #fff;
-      font-size: 0.75rem; /* text-xs */
-      padding: 0.25rem 0.75rem; /* py-1 px-3 */
+      font-size: 0.7rem; /* Smaller font for options */
+      padding: 0.2rem 0.6rem; 
+      border-radius: 0.75rem;
     }
     .price-option-button.active {
       background-color: #4f46e5; /* Indigo */
@@ -67,21 +68,21 @@
 <body class="bg-light">
 
   <!-- Header -->
-  <header class="bg-white shadow-sm py-4 mb-5">
+  <header class="bg-white shadow-sm py-3 mb-4"> <!-- Reduced padding/margin for compactness -->
     <div class="container d-flex flex-column flex-sm-row justify-content-between align-items-center">
-      <div class="d-flex align-items-center mb-3 mb-sm-0">
-        <h1 class="h3 fw-bold text-dark mb-0">V Love Food</h1>
+      <div class="d-flex align-items-center mb-2 mb-sm-0">
+        <h1 class="h4 fw-bold text-dark mb-0">V Love Food</h1> <!-- Slightly smaller title -->
       </div>
       <div class="d-flex align-items-center">
-        <p class="lead fw-medium text-secondary mb-0">Call/WhatsApp: 9346445057</p>
+        <p class="fw-medium text-secondary mb-0 small">Call/WhatsApp: 9346445057</p>
       </div>
     </div>
   </header>
 
   <!-- Main Content: Product Grid -->
   <main class="container py-4">
-    <h2 class="text-center mb-5 fw-light text-muted">Authentic Indian Pickles, Sweets, and Powders</h2>
-    <div id="products-grid" class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+    <h2 class="text-center mb-4 fw-light text-muted h4">Authentic Indian Pickles, Sweets, and Powders</h2> <!-- Smaller section title -->
+    <div id="products-grid" class="row row-cols-2 row-cols-sm-2 row-cols-lg-4 g-3"> <!-- Changed to row-cols-4 on large screens for smaller cards -->
       <!-- Product Cards will be injected here by JavaScript -->
     </div>
 
@@ -177,13 +178,13 @@
       
       card.innerHTML = `
         <img src="${item.imageUrl}" class="card-img-top product-image" alt="${item.name}">
-        <div class="card-body d-flex flex-column">
-          <h3 class="h5 card-title fw-semibold text-dark">${item.name}</h3>
-          <p class="card-text text-muted small mb-3">${product.category}</p>
-          <div class="d-flex flex-wrap gap-2 mb-3 mt-auto" id="options-${uniqueId}"></div>
-          <div class="mt-auto d-flex align-items-center justify-content-between pt-3 border-top">
-            <p class="h4 fw-bold text-primary mb-0" id="price-${uniqueId}">₹${item.options[0].price}</p>
-            <button class="purchase-button btn btn-dark btn-sm rounded-pill shadow-sm fw-medium px-4">
+        <div class="card-body d-flex flex-column p-3"> <!-- Reduced padding to p-3 -->
+          <h3 class="h6 card-title fw-semibold text-dark mb-1">${item.name}</h3> <!-- Reduced title size h5 -> h6 -->
+          <p class="card-text text-muted small mb-2">${product.category}</p> <!-- Reduced bottom margin -->
+          <div class="d-flex flex-wrap gap-1 mb-2 mt-auto" id="options-${uniqueId}"></div> <!-- Reduced gap and margin -->
+          <div class="mt-auto d-flex align-items-center justify-content-between pt-2 border-top"> <!-- Reduced top padding -->
+            <p class="h5 fw-bold text-primary mb-0" id="price-${uniqueId}">₹${item.options[0].price}</p> <!-- Reduced price size h4 -> h5 -->
+            <button class="purchase-button btn btn-dark btn-sm rounded-pill shadow-sm fw-medium px-3"> <!-- Reduced px-4 to px-3 -->
               Buy Now
             </button>
           </div>
