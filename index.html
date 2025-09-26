@@ -9,34 +9,64 @@
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background-color: #f3f4f6;
+      background-color: #f3f4f6; /* Equivalent to bg-gray-100 */
+      color: #343a40;
     }
-    .container {
-      max-width: 1200px;
-    }
+    
     .product-card {
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+      /* Apply centered card behavior */
       transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+      border-radius: 1rem;
+      overflow: hidden;
+      width: 100%; /* Ensure card takes full column width */
     }
     .product-card:hover {
       transform: translateY(-5px);
-      max-width:80%;
-      width:300px;
-      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+      /* Keeping the visual effect subtle in the grid context */
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05) !important;
     }
-    .purchase-button {
-      transition: background-color 0.3s ease;
+    
+    .product-image {
+      /* Reduced height for smaller cards */
+      width: 100%;
+      height: 150px; 
+      object-fit: cover; /* Ensures image covers the area */
     }
-    .purchase-button:hover {
-      background-color: #2563eb;
-    }
+
+    /* Custom button colors */
     .price-option-button {
       transition: background-color 0.3s ease, color 0.3s ease;
+      border: 1px solid #ced4da;
+      color: #6c757d;
+      background-color: #fff;
+      font-size: 0.7rem; /* Smaller font for options */
+      padding: 0.2rem 0.6rem; 
+      border-radius: 0.75rem;
     }
     .price-option-button.active {
-      background-color: #4f46e5;
+      background-color: #4f46e5; /* Indigo */
       color: #fff;
+      border-color: #4f46e5;
     }
+
+    /* Manual Modal setup to avoid complex Bootstrap JS initialization in a single file */
+    .modal-backdrop-custom {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1040;
+      width: 100vw;
+      height: 100vh;
+      background-color: #000;
+      opacity: 0.5;
+    }
+    
+    /* Centering the modal itself in the fixed container */
+    .modal {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+    }
   </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
